@@ -1,0 +1,39 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: action
+name: jfrog  upload actions
+inputs:
+  url:  # id of input
+    description: 'Url'
+    required: true
+  username:  # id of input
+    description: 'username - (Optional if token is provided)'
+    required: false
+    default: ''
+  password:  # id of input
+    description: 'password - (Optional if token is provided)'
+    required: false
+    default: ''
+  token:  # id of input
+    description: 'token - (Optional if username and password is provided)'
+    required: false
+    default: ''  
+  artifactory-path:  # id of input
+    description: 'artifactory path'
+    required: true
+  file-path:  # id of input
+    description: 'file path'
+    required: true
+  
+runs:
+  using: composite
+  steps:
+    - id: run-jfrog-upload-action
+      name: run-jfrog-upload-action
+      uses: docker://registry.saas-dev.beescloud.com/staging/jfrog-actions:main-d02f050239840236e6f4fb028298761c08a154a2
+      shell: sh
+      env:
+        CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}"}}'
+      run: |
+        set -x
+        cd /app
+        ./jfrog_artifactory_actions_app invoke -i $CONFIG_JSON
