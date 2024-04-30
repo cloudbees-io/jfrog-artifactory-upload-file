@@ -29,7 +29,7 @@ runs:
   steps:
     - id: run-jfrog-upload-action
       name: run-jfrog-upload-action
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-4c6a201e7f9a125cbaa73af229334ecd15b45d4b
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-6fb4060a8b87ee601b78eeed012b64c042bec24c
       shell: sh
       env:
         CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}"}}'
