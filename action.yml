@@ -23,16 +23,34 @@ inputs:
   file-path:  # id of input
     description: 'file path'
     required: true
-  
+  send-artifact-info:
+      default: 'false'
+      description: >
+        If set, artifact info is sent to Cloudbees Platform.
+        Type: Boolean    
+      required: false
+  artifact-name:
+      description: >
+        If set, artifact name is sent to Cloudbees Platform.    
+      required: false
+  artifact-version:
+      description: >
+        If set, artifact version is sent to Cloudbees Platform.  
+      required: false
+      
 runs:
   using: composite
   steps:
     - id: run-jfrog-upload-action
       name: run-jfrog-upload-action
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-a8481dd3e080cfe848f408b23b7b96b114bfd466
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-30494c66b71961581c031cfadf627cd425a3d438
       shell: sh
       env:
-        CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}"}}'
+        CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}","send-artifact-info":${{ inputs.send-artifact-info }},"artifact-name":"${{ inputs.artifact-name }}","artifact-version":"${{ inputs.artifact-version }}"}}'
+        CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
+        CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
+        CLOUDBEES_RUN_ID: ${{ cloudbees.run_id }}
+        CLOUDBEES_RUN_ATTEMPT: ${{ cloudbees.run_attempt }}
       run: |
         set -x
         cd /app
