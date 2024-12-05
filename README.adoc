@@ -43,6 +43,21 @@ Use this action to upload a file to the JFrog Artifactory repository manager.
 | Yes
 | The JFrog Artifactory destination path for the upload.
 
+| `send-artifact-info`
+| String
+| No
+| If set to `true`, artifact information is sent to Cloudbees Platform.
+
+| `artifact-name`
+| String
+| No
+| If set, artifact name is sent to Cloudbees Platform. Otherwise, the file name will be the artifact name.
+
+| `artifact-version`
+| String
+| No
+| If set, artifact version is sent to Cloudbees Platform. Otherwise, the md5 checksum of the file will be the version.
+
 |===
 
 == Usage example
