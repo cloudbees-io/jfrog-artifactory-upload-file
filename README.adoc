@@ -1,6 +1,7 @@
 = CloudBees action: Upload a file to JFrog Artifactory
 
-Use this action to upload a file to the JFrog Artifactory repository manager.
+Use this action to upload a file to the JFrog Artifactory repository manager. 
+This action also reports artifact-related data to the workflow run for artifact traceability purposes.
 
 == Inputs
 
@@ -13,10 +14,25 @@ Use this action to upload a file to the JFrog Artifactory repository manager.
 | Required?
 | Description
 
+| `artifactory-path`
+| String
+| Yes
+| The JFrog Artifactory destination path for the upload.
+
+| `file-path`
+| String
+| Yes
+| The path of the file to be uploaded.
+
 | `url`
 | String
 | Yes
 | The JFrog Artifactory server URL.
+
+| `password`
+| String
+| Required only if `token` is not specified.
+| The JFrog Artifactory password.
 
 | `token`
 | String
@@ -28,35 +44,21 @@ Use this action to upload a file to the JFrog Artifactory repository manager.
 | Required only if `token` is not specified.
 | The JFrog Artifactory username.
 
-| `password`
-| String
-| Required only if `token` is not specified.
-| The JFrog Artifactory password.
-
-| `file-path`
-| String
-| Yes
-| The path of the file to be uploaded.
-
-| `artifactory-path`
-| String
-| Yes
-| The JFrog Artifactory destination path for the upload.
-
-| `send-artifact-info`
-| String
-| No
-| Enable to send artifact information to the Cloudbees Platform for artifact traceability purposes.
-
 | `artifact-name`
 | String
 | No
-| The name of the artifact to send to the Cloudbees Platform for artifact traceability purposes.
+| The name of the artifact to send to the CloudBees platform for artifact traceability purposes.
 
 | `artifact-version`
 | String
 | No
-| The version of the artifact to send to the Cloudbees Platform for artifact traceability purposes.
+| The version of the artifact to send to the CloudBees platform for artifact traceability purposes.
+
+| `send-artifact-info`
+| Boolean
+| No
+| If `true`, sends artifact information to the CloudBees platform for artifact traceability purposes.
+Default value is `false`.
 
 |===
 
@@ -72,24 +74,85 @@ Use this action to upload a file to the JFrog Artifactory repository manager.
 
 | `artifact-id`
 | String
-| The unique identifier of the artifact.
+| The unique identifier of the artifact reported to the CloudBees platform.
 
 |===
 
-== Usage example
+== Usage examples
 
-In your YAML file, add:
+=== Basic example
+
+The following is a basic example of using the action:
 
 [source,yaml]
 ----
       - name: Upload file from JFrog Artifactory
         uses: cloudbees-io/jfrog-artifactory-upload-file@v1
         with:
+          artifactory-path: "test-image.tar"
+          file-path: "/local-path"
+          url: ${{ JFROG_URL }}
+          token: ${{ secrets.JFROG_TOKEN }}
+
+----
+
+=== Using optional inputs
+
+The following example specifies optional inputs to report artifact data to the workflow run.
+
+[source,yaml,role="default-expanded"]
+----
+      - name: Upload file from JFrog Artifactory
+        uses: cloudbees-io/jfrog-artifactory-upload-file@v1
+        with:
+          artifactory-path: "test-image.tar"
+          file-path: "/local-path"
           url: ${{ JFROG_URL }}
           username: ${{ secrets.JFROG_USERNAME }}
           password: ${{ secrets.JFROG_PASSWORD }}
-          file-path: "/local-path"
-          artifactory-path: "test-image.tar"
+          artifact-name: my-artifact
+          artifact-version: 1.0.0
+          send-artifact-info: true
+----
+
+=== Full workflow example
+
+The following workflow example:
+
+* Checks out source code from a repository.
+* Uses the action to upload a file.
+* Prints the artifact ID of the uploaded file.
+
+[source,yaml,role="default-expanded"]
+----
+
+name: jfrog-artifactory-upload-file
+kind: workflow
+apiVersion: automation.cloudbees.io/v1alpha1
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  upload-file-job:
+    steps:
+      - name: checkout-source-code
+        uses: cloudbees-io/checkout@v1
+      - name: Jfrog artifactory upload file
+        id: jfrog-upload
+        uses: cloudbees-io/jfrog-artifactory-upload-file@v1
+        with:
+          artifactory-path: my-repo/my-jfrog/test.zip
+          file-path: ${{ cloudbees.workspace }}/my-files/for-upload.zip
+          url: ${{ vars.JFROG_URL }}
+          username: ${{ vars.JFROG_USERNAME }}
+          password: ${{ secrets.JFROG_PASSWORD }}
+      - name: Print output parameter artifact ID from JFrog upload action
+        uses: docker://alpine:latest
+        shell: sh
+        run: |
+          echo "artifact ID for my-artifact:1.0.0 at my-repo/my-jfrog/test.zip is: ${{ steps.jfrog-upload.outputs.artifact-id }}"
 
 ----
 
@@ -100,5 +163,5 @@ link:https://opensource.org/license/mit/[MIT license].
 
 == References
 
-* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-saas-platform-actions/latest/[using actions in CloudBees workflows].
-* Learn about link:https://docs.cloudbees.com/docs/cloudbees-saas-platform/latest/[the CloudBees platform].
+* Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
+* Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
