@@ -3,6 +3,12 @@
 Use this action to upload a file to the JFrog Artifactory repository manager. 
 This action also reports artifact-related data to the workflow run for artifact traceability purposes.
 
+== Automatic artifact data reporting
+
+This action link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/workflows/artifacts[reports artifact-related data] to the workflow run for artifact traceability purposes.
+
+Do *not* include the link:https://github.com/cloudbees-io/register-build-artifact[`register-build-artifact` action] in the same job, as the resulting run would register duplicate artifact entries to CloudBees platform.
+
 == Inputs
 
 [cols="2a,1a,3a,3a",options="header"]
@@ -47,17 +53,17 @@ This action also reports artifact-related data to the workflow run for artifact 
 | `artifact-name`
 | String
 | No
-| The name of the artifact to send to the CloudBees platform for artifact traceability purposes.
+| The name of the artifact to send to CloudBees platform for artifact traceability purposes.
 
 | `artifact-version`
 | String
 | No
-| The version of the artifact to send to the CloudBees platform for artifact traceability purposes.
+| The version of the artifact to send to CloudBees platform for artifact traceability purposes.
 
 | `send-artifact-info`
 | Boolean
 | No
-| If `true`, sends artifact information to the CloudBees platform for artifact traceability purposes.
+| If `true`, sends artifact information to CloudBees platform for artifact traceability purposes.
 Default value is `false`.
 
 |===
@@ -74,7 +80,7 @@ Default value is `false`.
 
 | `artifact-id`
 | String
-| The unique identifier of the artifact reported to the CloudBees platform.
+| The unique identifier of the artifact reported to CloudBees platform.
 
 |===
 
@@ -164,4 +170,4 @@ link:https://opensource.org/license/mit/[MIT license].
 == References
 
 * Learn more about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/actions[using actions in CloudBees workflows].
-* Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[the CloudBees platform].
+* Learn about link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/[CloudBees platform].
