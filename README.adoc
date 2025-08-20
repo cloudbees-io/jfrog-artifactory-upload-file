@@ -9,6 +9,8 @@ This action link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/workf
 
 Do *not* include the link:https://github.com/cloudbees-io/register-build-artifact[`register-build-artifact` action] for the same artifact version, as the resulting run would register duplicate artifact entries to CloudBees platform.
 
+You must specify `send-artifact-info: true` in order to send artifact data to CloudBees platform.
+
 == Inputs
 
 [cols="2a,1a,3a,3a",options="header"]
