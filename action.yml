@@ -16,7 +16,7 @@ inputs:
   token:  # id of input
     description: 'token - (Optional if username and password is provided)'
     required: false
-    default: ''  
+    default: ''
   artifactory-path:  # id of input
     description: 'artifactory path'
     required: true
@@ -31,11 +31,11 @@ inputs:
       required: false
   artifact-name:
       description: >
-        If set, artifact name is sent to Cloudbees Platform.    
+        If set, artifact name is sent to Cloudbees Platform.
       required: false
   artifact-version:
       description: >
-        If set, artifact version is sent to Cloudbees Platform.  
+        If set, artifact version is sent to Cloudbees Platform.
       required: false
   commit:
     description: >
@@ -52,11 +52,16 @@ inputs:
       The ref or branch of the source repository, used when registering the build artifact in CloudBees platform.
     default: ${{ cloudbees.scm.ref }}
     required: false
+  component-id:
+    description: >
+      The ID of the component associated with the artifact. If not provided, the artifact is registered with the component of the current workflow run.
+    default: ${{ cloudbees.component.id }}
+    required: false
 outputs:
   artifact-id:
     value: ${{ steps.run-jfrog-upload-action.outputs.artifact-id }}
     description: "The unique identifier of the artifact."
-      
+
 runs:
   using: composite
   steps:
@@ -65,7 +70,7 @@ runs:
       uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-7b49cb1e4dee9a4a2db3f8c020997ebf2957968e
       shell: sh
       env:
-        CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}","send-artifact-info":${{ inputs.send-artifact-info }},"artifact-name":"${{ inputs.artifact-name }}","artifact-version":"${{ inputs.artifact-version }}","commit":"${{ inputs.commit }}","repository-url":"${{ inputs.repository-url }}","ref":"${{ inputs.ref }}"}}'
+        CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}","send-artifact-info":${{ inputs.send-artifact-info }},"artifact-name":"${{ inputs.artifact-name }}","artifact-version":"${{ inputs.artifact-version }}","commit":"${{ inputs.commit }}","repository-url":"${{ inputs.repository-url }}","ref":"${{ inputs.ref }}","component-id":"${{ inputs.component-id }}"}}'
         CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
         CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
         CLOUDBEES_RUN_ID: ${{ cloudbees.run_id }}

@@ -1,6 +1,6 @@
 = CloudBees action: Upload a file to JFrog Artifactory
 
-Use this action to upload a file to the JFrog Artifactory repository manager. 
+Use this action to upload a file to the JFrog Artifactory repository manager.
 This action also reports artifact-related data to the workflow run for artifact traceability purposes.
 
 == Automatic artifact data reporting
@@ -85,6 +85,11 @@ Default is `${{ cloudbees.scm.repositoryUrl }}`.
 | No
 | The ref or branch of the source repository, used when registering the build artifact in CloudBees platform.
 Default is `${{ cloudbees.scm.ref }}`.
+
+|`component-id`
+| String
+| No
+| The link:https://docs.cloudbees.com/docs/cloudbees-platform/latest/organizations-components/components#component-id[ID of the component] associated with the artifact. If not provided, the artifact is registered with the component of the current workflow run. Default is `${{ cloudbees.component.id }}`.
 |===
 
 == Outputs
@@ -183,7 +188,7 @@ jobs:
 
 == License
 
-This code is made available under the 
+This code is made available under the
 link:https://opensource.org/license/mit/[MIT license].
 
 == References
