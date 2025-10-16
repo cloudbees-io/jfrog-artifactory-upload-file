@@ -26,30 +26,30 @@ inputs:
   send-artifact-info:
       default: 'false'
       description: >
-        If set, artifact info is sent to Cloudbees Platform.
+        If set, artifact info is sent to CloudBees Unify.
         Type: Boolean
       required: false
   artifact-name:
       description: >
-        If set, artifact name is sent to Cloudbees Platform.
+        If set, artifact name is sent to CloudBees Unify.
       required: false
   artifact-version:
       description: >
-        If set, artifact version is sent to Cloudbees Platform.
+        If set, artifact version is sent to CloudBees Unify.
       required: false
   commit:
     description: >
-      The commit ID from the source repository, used when registering the build artifact in CloudBees platform.
+      The commit ID from the source repository, used when registering the build artifact in CloudBees Unify.
     default: ${{ cloudbees.scm.sha }}
     required: false
   repository-url:
     description: >
-      The clone URL of the source repository, used when registering the build artifact in CloudBees platform.
+      The clone URL of the source repository, used when registering the build artifact in CloudBees Unify.
     default: ${{ cloudbees.scm.repositoryUrl }}
     required: false
   ref:
     description: >
-      The ref or branch of the source repository, used when registering the build artifact in CloudBees platform.
+      The ref or branch of the source repository, used when registering the build artifact in CloudBees Unify.
     default: ${{ cloudbees.scm.ref }}
     required: false
   component-id:
@@ -57,6 +57,7 @@ inputs:
       The ID of the component associated with the artifact. If not provided, the artifact is registered with the component of the current workflow run.
     default: ${{ cloudbees.component.id }}
     required: false
+
 outputs:
   artifact-id:
     value: ${{ steps.run-jfrog-upload-action.outputs.artifact-id }}
