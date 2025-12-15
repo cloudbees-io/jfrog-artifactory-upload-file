@@ -60,7 +60,7 @@ inputs:
 
 outputs:
   artifact-id:
-    value: ${{ steps.run-jfrog-upload-action.outputs.artifact-id }}
+    value: ${{ steps.register-artifact.outputs.artifact-id }}
     description: "The unique identifier of the artifact."
 
 runs:
@@ -81,3 +81,17 @@ runs:
         set -x
         cd /app
         ./jfrog_artifactory_actions_app invoke -i $CONFIG_JSON
+    - id: register-artifact
+      name: Register an artifact with the CloudBees Unify
+      uses: cloudbees-io/register-build-artifact@v2
+      if: ${{ inputs.send-artifact-info == true }}
+      with:
+        name: ${{ steps.run-jfrog-upload-action.outputs.artifact-name }}
+        url: ${{ steps.run-jfrog-upload-action.outputs.url }}
+        version: ${{ steps.run-jfrog-upload-action.outputs.artifact-version }}
+        commit: ${{ inputs.commit }}
+        ref: ${{ inputs.ref }}
+        repository-url: ${{ inputs.repository-url }}
+        digest: ${{ steps.run-jfrog-upload-action.outputs.digest }}
+        #type: ${{ steps.run-jfrog-upload-action.outputs.file-type }}
+        component-id: ${{ inputs.component-id }}
