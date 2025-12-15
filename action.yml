@@ -93,5 +93,5 @@ runs:
         ref: ${{ inputs.ref }}
         repository-url: ${{ inputs.repository-url }}
         digest: ${{ steps.run-jfrog-upload-action.outputs.digest }}
-        #type: ${{ steps.run-jfrog-upload-action.outputs.file-type }}
+        type: ${{ steps.run-jfrog-upload-action.outputs.file-type }}
         component-id: ${{ inputs.component-id }}
