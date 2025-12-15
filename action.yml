@@ -84,7 +84,7 @@ runs:
     - id: register-artifact
       name: Register an artifact with the CloudBees Unify
       uses: cloudbees-io/register-build-artifact@v2
-      if: ${{ inputs.send-artifact-info == true }}
+      if: ${{ inputs.send-artifact-info == 'true' }}
       with:
         name: ${{ steps.run-jfrog-upload-action.outputs.artifact-name }}
         url: ${{ steps.run-jfrog-upload-action.outputs.url }}
