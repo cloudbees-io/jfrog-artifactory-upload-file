@@ -81,7 +81,7 @@ runs:
         cd /app
         ./jfrog_artifactory_actions_app invoke -i $CONFIG_JSON
     - id: register-artifact
-      name: Register an artifact with the CloudBees Unify
+      name: Register an artifact with CloudBees Unify
       uses: cloudbees-io/register-build-artifact@v2
       if: ${{ inputs.send-artifact-info == 'true' }}
       with:
