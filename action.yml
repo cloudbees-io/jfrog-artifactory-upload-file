@@ -60,7 +60,7 @@ inputs:
 
 outputs:
   artifact-id:
-    value: ${{ steps.run-jfrog-upload-action.outputs.artifact-id }}
+    value: ${{ steps.register-artifact.outputs.artifact-id }}
     description: "The unique identifier of the artifact."
 
 runs:
@@ -68,7 +68,7 @@ runs:
   steps:
     - id: run-jfrog-upload-action
       name: run-jfrog-upload-action
-      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-77d846d5d88e530646ffd013d9d3a183582d798b
+      uses: docker://public.ecr.aws/l7o7z1g8/actions/jfrog-actions:main-521293b37c888765d9f7e56af0920291e7ec7613
       shell: sh
       env:
         CONFIG_JSON: '{"metaInfo":{"srcType":"upload","url":"${{ inputs.url }}","username":"${{ inputs.username }}","password":"${{ inputs.password }}","token":"${{ inputs.token }}","artifactoryPath":"${{ inputs.artifactory-path }}","filePath":"${{ inputs.file-path }}","send-artifact-info":${{ inputs.send-artifact-info }},"artifact-name":"${{ inputs.artifact-name }}","artifact-version":"${{ inputs.artifact-version }}","commit":"${{ inputs.commit }}","repository-url":"${{ inputs.repository-url }}","ref":"${{ inputs.ref }}","component-id":"${{ inputs.component-id }}"}}'
@@ -80,3 +80,17 @@ runs:
         set -x
         cd /app
         ./jfrog_artifactory_actions_app invoke -i $CONFIG_JSON
+    - id: register-artifact
+      name: Register an artifact with CloudBees Unify
+      uses: cloudbees-io/register-build-artifact@v2
+      if: ${{ inputs.send-artifact-info == 'true' }}
+      with:
+        name: ${{ steps.run-jfrog-upload-action.outputs.artifact-name }}
+        url: ${{ steps.run-jfrog-upload-action.outputs.url }}
+        version: ${{ steps.run-jfrog-upload-action.outputs.artifact-version }}
+        commit: ${{ inputs.commit }}
+        ref: ${{ inputs.ref }}
+        repository-url: ${{ inputs.repository-url }}
+        digest: ${{ steps.run-jfrog-upload-action.outputs.digest }}
+        type: ${{ steps.run-jfrog-upload-action.outputs.file-type }}
+        component-id: ${{ inputs.component-id }}
